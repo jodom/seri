@@ -1,7 +1,7 @@
 from selenium import webdriver
 import unittest
 
-class NewNotesTest(unittest.TestCase):
+class NewSerieTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -21,22 +21,29 @@ class NewNotesTest(unittest.TestCase):
         self.assertIn('Seris, a note a day', self.browser.title)
         self.fail('Finich the test!')
 
-        # He is  invited to enter a note straight a way
+        # He is  invited to create a serie straight a way
 
-        # He types " My first note" into a text box
+        # He types " Notes to future self" into a text box
 
         # When he hits enter, the page updates with a new listing
-        # "My first note, date" as an item in the seris
+        # "Notes to future self" as a new serie
 
-        # There is still a text box inviting him to add a new note
+        # There is a text box inviting him to add a note to the serie
+
+        # He enters, " My first note" and presses enter
+
+        # Now the serie has a single note : "My first Note, Date"
+
+        # There is still a text box inviting him to add another note to the serie
 
         # He enters, " That was easy" and presses enter
 
-        # The page updates again, and now both items are listed
+        # The page updates again, and now both notes are listed
 
         # Jodom wonders whether the site will remember his notes
 
-        # Then he sees that the site generated a uniqe URL for him -- ther is some explanatory text to that effect
+        # Then he sees that the site generated a uniqe URL for him
+        # -- there is some explanatory text to that effect
 
         # He visits that URL. His notes are still there
 
