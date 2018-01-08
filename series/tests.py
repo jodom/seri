@@ -23,3 +23,12 @@ class HomePageTest(TestCase):
         response = home(request)
         expected_html = render_to_string('seris/home.html')
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_can_save_a_POST_request(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['serie'] = 'Notes to future self'
+
+        response = home(request)
+
+        self.assertIn('Notes to future self', response.content.decode())
