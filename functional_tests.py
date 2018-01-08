@@ -37,6 +37,10 @@ class NewSerieTest(unittest.TestCase):
         # "Notes to future self" as a new serie
         seriebox.send_keys(Keys.ENTER)
 
+        # The new Serie is created, with a page showing its title now being displayed
+        title = self.browser.find_element_by_id('id_serie_title')
+        self.assertEqual(title.text, 'Notes to future self')
+
         # There is a text box inviting him to add a note to the serie
         notebox = self.browser.find_element_by_id('id_new_note')
         self.assertEqual(notebox.get_attribute('placeholder'), 'New note')
