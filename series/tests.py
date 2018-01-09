@@ -1,7 +1,8 @@
 from django.core.urlresolvers import resolve
-from django.template.loader import render_to_string
+from django.shortcuts import render
 from django.http import HttpRequest
 from django.test import TestCase
+import re
 
 from .views import home
 # Create your tests here.
@@ -18,11 +19,17 @@ class HomePageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, home)
 
+    def strip_csrf(self, htmltext):
+        """ strip the csrf value from response in order to compare templates rendered """
+        csrf_regex = r'<input[^>]+csrfmiddlewaretoken[^>]+>'
+        return re.sub(csrf_regex, '', htmltext)
+
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home(request)
-        expected_html = render_to_string('seris/home.html')
-        self.assertEqual(response.content.decode(), expected_html)
+        expected_response = render(request, 'seris/home.html')
+        self.assertEqual(self.strip_csrf(response.content.decode()), \
+        self.strip_csrf(expected_response.content.decode()))
 
     def test_home_page_can_save_a_POST_request(self):
         request = HttpRequest()
