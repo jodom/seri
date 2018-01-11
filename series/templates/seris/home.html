@@ -3,10 +3,11 @@
         <title>Seris, a note a day</title>
     </head>
     <body>
-        <h1>Seris</h1>
-        <form action="" method="POST">
-            {% csrf_token %}
-            <input type="text" name="serie" id="id_new_serie" placeholder="Create a new Serie">
-        </form>
+        {% block main %}
+            <h1 id="id_header">Seris</h1>
+            <h3 id="id_sub_header">a note a day</h3>
+
+            <a href="{% url 'new_serie' %}" id="id_new_serie">New Serie</a>
+        {% endblock %}
     </body>
 </html>

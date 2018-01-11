@@ -1,11 +1,14 @@
-<html>
+{% extends 'seris/home.html' %}
 
-    <head>
-        <title>Seris, a note a day</title>
-    </head>
-
-    <body>
-        <h1>{{ serie_title }}</h1>
-    </body>
-
-</html>
+{% block main %}
+    <div id="wrapper">
+        {% if serie_title %}
+            <h1 id="id_serie_title">{{ serie_title }}</h1>
+        {% else %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="text" name="serie" id="id_new_serie" placeholder="Create a new Serie">
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
