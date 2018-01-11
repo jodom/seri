@@ -19,12 +19,20 @@ class NewSerieTest(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # He notices that the page title and header mention Seris - the note taking app
-        self.assertIn('Seris, a note a day', self.browser.title)
+        self.assertIn('Seris', self.browser.title)
 
-        header = self.browser.find_element_by_tag_name('h1').text
+        header = self.browser.find_element_by_id('id_header').text
+        self.assertEqual('Seris', header)
 
-        self.assertIn('Seris', header)
+        # Below the header is a catchphrase, 'a note a day'
+        sub_header = self.browser.find_element_by_id('id_sub_header').text
+        self.assertEqual('a note a day', sub_header)
 
+        # Under the catchphrase, there is a link inviting him to create a serie
+        new_serie_link = self.browser.find_element_by_id('id_new_serie')
+
+        # He clicks on it and is taken to a new page where he can create a serie
+        new_serie_link.send_keys(Keys.ENTER)
 
         # He is  invited to create a serie straight a way
         seriebox = self.browser.find_element_by_id('id_new_serie')
@@ -50,12 +58,10 @@ class NewSerieTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_notes_table')
 
         # Now the serie has a single note : "My first Note, Date"
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == 'My first note') for row in rows)
+        self.fail('Finich the test!')
 
         # There is still a text box inviting him to add another note to the serie
         # He enters, " That was easy" and presses enter
-        self.fail('Finich the test!')
 
         # The page updates again, and now both notes are listed
 
