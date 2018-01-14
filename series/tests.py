@@ -2,9 +2,12 @@ from django.core.urlresolvers import resolve
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.test import TestCase
+from django.utils import timezone
+from django.contrib.auth import authenticate, login
 import re
 
 from . import views
+from . import models
 # Create your tests here.
 
 class SmokeTest(TestCase):
@@ -45,3 +48,15 @@ class HomePageTest(TestCase):
 
         response = views.new_serie(request)
         self.assertIn('Notes to future self', response.content.decode())
+
+
+class SerieModelTest(TestCase):
+
+    def test_create_new_serie(self):
+        serie = models.Serie(title="Notes to future self")
+        self.assertTrue(serie)
+        # self.assertEqual(serie.author, 'auth.User')
+        self.assertEqual(serie.title, 'Notes to future self')
+        self.assertLessEqual(serie.date_created, timezone.now())
+        self.assertEqual(serie.limit, 100)
+        self.assertTrue(serie.public)
