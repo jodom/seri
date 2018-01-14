@@ -27,13 +27,13 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = views.home(request)
-        expected_response = render(request, 'seris/home.html')
+        expected_response = render(request, 'series/home.html')
         self.assertEqual(response.content.decode(), expected_response.content.decode())
     
     def test_new_serie_page_returns_correct_html(self):
         request = HttpRequest()
         response = views.new_serie(request)
-        expected_response = render(request, 'seris/serie.html')
+        expected_response = render(request, 'series/serie.html')
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
