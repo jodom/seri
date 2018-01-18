@@ -2,7 +2,6 @@ from django.core.urlresolvers import resolve
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.test import TestCase
-from django.utils import timezone
 from django.contrib.auth import authenticate, login
 import re
 
@@ -52,11 +51,14 @@ class PageTests(TestCase):
 
 class SerieModelTest(TestCase):
 
-    def test_create_new_serie(self):
+    def test_create_and_save_new_serie(self):
         serie = models.Serie(title="Notes to future self")
         self.assertTrue(serie)
         # self.assertEqual(serie.author, 'auth.User')
         self.assertEqual(serie.title, 'Notes to future self')
-        self.assertLessEqual(serie.date_created, timezone.now())
         self.assertEqual(serie.limit, 100)
         self.assertTrue(serie.public)
+        count_before = models.Serie.objects.count()
+        serie.save()
+        count_after = models.Serie.objects.count()
+        self.assertLess(count_before, count_after)
