@@ -16,7 +16,7 @@ class SmokeTest(TestCase):
         self.assertEqual(2+2-1, 3)
 
 
-class HomePageTest(TestCase):
+class PageTests(TestCase):
 
     def test_root_url_resolves_to_home_view(self):
         found = resolve('/')
