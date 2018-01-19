@@ -7,6 +7,7 @@ import re
 
 from . import views
 from . import models
+from . import forms
 # Create your tests here.
 
 class SmokeTest(TestCase):
@@ -16,6 +17,7 @@ class SmokeTest(TestCase):
 
 
 class PageTests(TestCase):
+    maxDiff = None
 
     def test_root_url_resolves_to_home_view(self):
         found = resolve('/')
@@ -35,22 +37,25 @@ class PageTests(TestCase):
     def test_new_serie_page_returns_correct_html(self):
         request = HttpRequest()
         response = views.new_serie(request)
-        expected_response = render(request, 'series/serie.html')
+        expected_response = render(request, 'series/new_serie.html', {'form': forms.SerieForm()})
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
 
-    def test_save_a_new_Serie(self):
+    def test_see_a_new_Serie_details(self):
         request = HttpRequest()
-        request.method = 'POST'
-        request.POST['serie'] = 'Notes to future self'
-
-        response = views.new_serie(request)
+        serie = models.Serie(title='Notes to future self')
+        serie.save()
+        response = views.serie_detail(request, pk=serie.pk)
         self.assertIn('Notes to future self', response.content.decode())
 
 
-class SerieModelTest(TestCase):
+class FormTests(TestCase):
+    pass
 
+class ModelTests(TestCase):
+
+    # Serie model tests
     def test_create_and_save_new_serie(self):
         serie = models.Serie(title="Notes to future self")
         self.assertTrue(serie)
