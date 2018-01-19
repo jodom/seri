@@ -35,7 +35,7 @@ class NewSerieTest(unittest.TestCase):
         new_serie_link.send_keys(Keys.ENTER)
 
         # He is  invited to create a serie straight a way
-        seriebox = self.browser.find_element_by_id('id_new_serie')
+        seriebox = self.browser.find_element_by_id('id_title_input')
         self.assertEqual(seriebox.get_attribute('placeholder'), 'Create a new Serie')
 
         # He types "Notes to future self" into a text box
