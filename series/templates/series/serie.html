@@ -5,10 +5,7 @@
         {% if serie_title %}
             <h1 id="id_serie_title">{{ serie_title }}</h1>
         {% else %}
-            <form action="" method="POST">
-                {% csrf_token %}
-                <input type="text" name="serie" id="id_new_serie" placeholder="Create a new Serie">
-            </form>
+            <a href="{% url 'new_serie' %}" id="id_new_serie">New Serie</a>
         {% endif %}
     </div>
 {% endblock %}

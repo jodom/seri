@@ -1,0 +1,31 @@
+{% extends 'series/home.html' %}
+
+{% block main %}
+    <div id="wrapper">
+        {% if serie_title %}
+        <h1 id="id_serie_title">{{ serie_title }}</h1>
+        {% else %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.source.errors }}
+            {{ form.source }}
+            <p>
+                <span>{{ form.title.label_tag }}</span>
+                <span name="serie" id="new_serie" placeholder="Create a new Serie">
+                    {{ form.title.errors }}
+                    {{ form.title }}
+                </span>
+            </p>
+            <p>
+                <span>{{ form.public.label_tag }}</span>
+                <span>
+                    {{ form.public.errors }}
+                    {{ form.public }}
+                </span>
+            </p>
+
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}
