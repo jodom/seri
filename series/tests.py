@@ -51,7 +51,12 @@ class PageTests(TestCase):
 
 
 class FormTests(TestCase):
-    pass
+
+    # SerieForm tests
+    def test_serie_from_has_custom_fields(self):
+        form = forms.SerieForm()
+        self.assertIn('id="id_title_input"', form.as_p())
+        self.assertIn('placeholder="Create a new Serie"', form.as_p())
 
 class ModelTests(TestCase):
 
