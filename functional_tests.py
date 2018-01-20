@@ -54,8 +54,8 @@ class NewSerieTest(unittest.TestCase):
         self.assertEqual(notebox.get_attribute('placeholder'), 'New note')
 
         # He enters, " My first note" and presses enter
-        notebox.send_keys('My first note').send_keys(Keys.ENTER)
-        table = self.browser.find_element_by_id('id_notes_table')
+        notebox.send_keys('My first note')
+        notebox.send_keys(Keys.ENTER)
 
         # Now the serie has a single note : "My first Note, Date"
         self.fail('Finich the test!')
