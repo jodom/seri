@@ -84,18 +84,18 @@ class ModelTests(TestCase):
         serie.save()
         count_after = models.Serie.objects.count()
         self.assertLess(count_before, count_after)
+        self.assertEqual(serie.note_set.count(), 0)
 
     # Note model tests
     def test_create_and_save_new_note(self):
         serie = models.Serie(title="Notes to future self")
         serie.save()
-        note = models.Note(title="My first note", text="here is to a great day", serie=serie)
+        note = models.Note(content="My first note. Here is to a great day", serie=serie)
         self.assertTrue(note)
         self.assertEqual(note.serie, serie)
-        self.assertEqual(note.title, "My first note")
-        self.assertEqual(note.text, "here is to a great day")
+        self.assertEqual(note.content, "My first note. Here is to a great day")
         count_before = models.Note.objects.count()
         note.save()
         count_after = models.Note.objects.count()
         self.assertLess(count_before, count_after)
-        self.assertEqual(models.Serie.notes.count(), count_after)
+        self.assertEqual(serie.note_set.count(), count_after)
