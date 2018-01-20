@@ -41,6 +41,12 @@ class PageTests(TestCase):
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
+    def test_serie_page_returns_correct_html(self):
+        request = HttpRequest()
+        response = views.serie_detail(request)
+        expected_response = render(request, 'series/serie.html')
+        self.assertEqual(self.strip_csrf(response.content.decode()), \
+        self.strip_csrf(expected_response.content.decode()))
 
     def test_see_a_new_Serie_details(self):
         request = HttpRequest()
