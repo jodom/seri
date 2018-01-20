@@ -13,3 +13,16 @@ class SerieForm(forms.ModelForm):
                 'id': 'id_title_input'
             }),
         }
+
+
+class NoteForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Note
+        fields = ('content',)
+        widgets = {
+            'content': forms.TextInput(attrs={
+                'placeholder': "New note",
+                'id': 'id_new_note'
+            })
+        }

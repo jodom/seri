@@ -17,6 +17,9 @@ def new_serie(request):
         form = forms.SerieForm
         return render(request, 'series/new_serie.html', {'form': form})
 
-def serie_detail(request, pk):
-    serie = models.Serie.objects.get(id=pk)
-    return render(request, 'series/serie.html', {'serie_title': serie.title})
+def serie_detail(request, pk=None):
+    if pk:
+        form = forms.NoteForm
+        serie = models.Serie.objects.get(id=pk)
+        return render(request, 'series/serie.html', {'serie_title': serie.title, 'form': form})
+    return render(request, 'series/serie.html')
