@@ -47,7 +47,13 @@ class PageTests(TestCase):
         serie = models.Serie(title='Notes to future self')
         serie.save()
         response = views.serie_detail(request, pk=serie.pk)
+        expected_response = render(
+            request, 'series/serie.html',
+            {'serie_title': serie.title, 'form': forms.NoteForm()})
         self.assertIn('Notes to future self', response.content.decode())
+        self.assertEqual(
+            self.strip_csrf(response.content.decode()),
+            self.strip_csrf(expected_response.content.decode()))
 
 
 class FormTests(TestCase):
