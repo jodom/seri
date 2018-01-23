@@ -9,7 +9,10 @@ class Serie(models.Model):
     limit = models.IntegerField(default=100)
     public = models.BooleanField(default=True)
 
-    # def notes(self)
+    def notes(self):
+        notes = self.note_set.all()
+        return notes
+
     def publish(self):
         self.save()
 
