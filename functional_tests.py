@@ -11,6 +11,13 @@ class NewSerieTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def lookup_a_note_in_a_serie(self, text):
+        notes_list = self.browser.find_element_by_tag_name('ul')
+        notes = notes_list.find_elements_by_tag_name('li')
+
+        self.assertIn(text, [note.content for note in notes])
+        self.assertTrue(any(note.content == text for note in notes))
+
     def test_can_start_a_serie_and_see_it_later(self):
         # Jodom has been intospecting a lot lately
         # He has bult an app to capture his thoughts in the form of short notes
@@ -57,15 +64,20 @@ class NewSerieTest(unittest.TestCase):
         notebox.send_keys('My first note')
         notebox.send_keys(Keys.ENTER)
 
-        # Now the serie has a single note : "My first Note, Date"
-        self.fail('Finich the test!')
+        # Now the serie has a single note : "My first Note"
+        self.lookup_a_note_in_a_serie('My first note')
 
         # There is still a text box inviting him to add another note to the serie
         # He enters, " That was easy" and presses enter
+        notebox.send_keys('That was easy')
+        notebox.send_keys(Keys.ENTER)
 
         # The page updates again, and now both notes are listed
+        self.lookup_a_note_in_a_serie('My first note')
+        self.lookup_a_note_in_a_serie('That was easy')
 
         # Jodom wonders whether the site will remember his notes
+        self.fail('Finich the test!')
 
         # Then he sees that the site generated a uniqe URL for him
         # -- there is some explanatory text to that effect
