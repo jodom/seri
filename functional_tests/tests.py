@@ -1,8 +1,8 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
-class NewSerieTest(unittest.TestCase):
+class NewSerieTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -23,7 +23,7 @@ class NewSerieTest(unittest.TestCase):
         # He has bult an app to capture his thoughts in the form of short notes
         # So he goes home and checks the homepage
 
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # He notices that the page title and header mention Seris - the note taking app
         self.assertIn('Seris', self.browser.title)
@@ -85,6 +85,3 @@ class NewSerieTest(unittest.TestCase):
         # He visits that URL. His notes are still there
 
         # Satisfied, he goes back to sleep
-
-if __name__ == '__main__':
-    unittest.main()
