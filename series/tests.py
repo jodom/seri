@@ -31,9 +31,19 @@ class PageTests(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = views.home(request)
-        expected_response = render(request, 'series/home.html')
-        self.assertEqual(response.content.decode(), expected_response.content.decode())
+        expected_response = render(request, 'series/home.html', {'form': forms.NoteForm()})
+        self.assertEqual(
+            self.strip_csrf(response.content.decode()),
+            self.strip_csrf(expected_response.content.decode()))
     
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        response = views.home(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/serie/1/')
+
+
     def test_new_serie_page_returns_correct_html(self):
         request = HttpRequest()
         response = views.new_serie(request)
