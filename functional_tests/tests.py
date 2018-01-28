@@ -19,6 +19,11 @@ class NewSerieTest(LiveServerTestCase):
         notebox.send_keys(text)
         notebox.send_keys(Keys.ENTER)
 
+    def confirm_serie_title(self, text):
+        ''' confirm the current serie title '''
+        title = self.browser.find_element_by_id('id_serie_title')
+        self.assertEqual(title.text, text)
+
     def lookup_a_note_in_a_serie(self, text):
         ''' confirm the existence of a note in a serie '''
         notes_list = self.browser.find_element_by_tag_name('ul')
@@ -49,8 +54,10 @@ class NewSerieTest(LiveServerTestCase):
         self.create_new_note('This is a quick note')
         
         # The page updates and he sees a page with the heading 'My Notes' and his note listed under it
-        title = self.browser.find_element_by_id('id_serie_title')
-        self.assertEqual(title.text, 'My Notes')
+        jodom_default_serie_url = self.browser.current_url
+        self.assertRegex(jodom_default_serie_url, '/serie/.+')
+
+        self.confirm_serie_title('My Notes')
 
         self.lookup_a_note_in_a_serie('This is a quick note')
 
@@ -70,12 +77,30 @@ class NewSerieTest(LiveServerTestCase):
         self.lookup_a_note_in_a_serie('My second note')
         self.lookup_a_note_in_a_serie('That was easy')
 
-        # Jodom wonders whether the site will remember his notes
-        self.fail('Finich the test!')
+        # Jodom recommend the app to his friend Liz, who comes along to the site from a different browser
+        # # this prevents cookie and session data transfer
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
 
-        # Then he sees that the site generated a uniqe URL for him
-        # -- there is some explanatory text to that effect
+        # Liz visits the homepage. There is no sign of Jodoms notes and Seris
+        self.browser.get(self.live_server_url)
 
-        # He visits that URL. His notes are still there
+        page = self.browser.find_element_by_tag_name('body')
+        self.assertNotIn('This is a quick note', page.text)
+        self.assertNotIn('My second note', page.text)
+        self.assertNotIn('That was easy', page.text)
 
-        # Satisfied, he goes back to sleep
+        # Liz decides to save a new note for herself
+        self.create_new_note('Buy milk after class')
+
+        # She gets her own unique URL
+        liz_default_serie_url = self.browser.current_url
+        self.assertRegex(liz_default_serie_url, '/serie/.+')
+        self.assertNotEqual(jodom_default_serie_url, liz_default_serie_url)
+
+        # To confirm Jodom's notes are not showing
+        page = self.browser.find_element_by_tag_name('body')
+        self.confirm_serie_title('My Notes')
+        self.assertNotIn('This is a quick note', page.text)
+        self.assertNotIn('My second note', page.text)
+        self.assertNotIn('That was easy', page.text)
