@@ -71,14 +71,26 @@ class PageTests(TestCase):
             self.strip_csrf(response.content.decode()),
             self.strip_csrf(expected_response.content.decode()))
 
+    def test_notes_are_listed_under_series(self):
+        request = HttpRequest()
+        serie = models.Serie.objects.create(title='My Serie')
+        response = views.serie_detail(request, pk=serie.pk)
+        self.assertIn('<ul id="id_notes_list">', response.content.decode())
+        self.assertIn('<li class="note">', response.content.decode())
+
 
 class FormTests(TestCase):
 
     # SerieForm tests
-    def test_serie_from_has_custom_fields(self):
+    def test_serie_form_has_custom_fields(self):
         form = forms.SerieForm()
         self.assertIn('id="id_title_input"', form.as_p())
         self.assertIn('placeholder="Create a new Serie"', form.as_p())
+
+    def test_note_form_has_custom_fields(self):
+        form = forms.NoteForm()
+        self.assertIn('id="id_new_note"', form.as_p())
+        self.assertIn('placeholder="Add note"', form.as_p())
 
 class ModelTests(TestCase):
 
