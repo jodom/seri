@@ -72,14 +72,13 @@ class PageTests(TestCase):
             self.strip_csrf(expected_response.content.decode()))
 
     def test_notes_are_listed_under_series(self):
-        request = HttpRequest()
         serie = models.Serie.objects.create(title='My Serie')
-        response = views.serie_detail(request, pk=serie.pk)
-        self.assertIn('<ul id="id_notes_list">', response.content.decode())
-
         models.Note.objects.create(content="A random note", serie=serie)
-        response = views.serie_detail(request, pk=serie.pk)
-        self.assertIn('<li class="note">', response.content.decode())
+        response = self.client.get('/serie/1/')
+        self.assertContains(response, '<ul id="id_notes_list">')
+        self.assertContains(response, 'My Serie')
+        self.assertContains(response, '<li class="note">')
+        self.assertContains(response, 'A random note')
 
 
 class FormTests(TestCase):
@@ -94,6 +93,7 @@ class FormTests(TestCase):
         form = forms.NoteForm()
         self.assertIn('id="id_new_note"', form.as_p())
         self.assertIn('placeholder="Add note"', form.as_p())
+
 
 class ModelTests(TestCase):
 
