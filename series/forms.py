@@ -22,7 +22,7 @@ class NoteForm(forms.ModelForm):
         fields = ('content',)
         widgets = {
             'content': forms.TextInput(attrs={
-                'placeholder': "New note",
+                'placeholder': "Add note",
                 'id': 'id_new_note'
             })
         }
