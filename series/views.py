@@ -8,15 +8,15 @@ def home(request):
     if request.method == 'POST':
         default_serie = models.Serie.objects.first()
         form = forms.NoteForm(request.POST)
-        if default_serie and default_serie.title=='My Notes':
-            # save new note under default serie
-            return redirect('serie_detail', pk=default_serie.pk)
-        else:
-            default_serie = models.Serie.objects.create(title='My Notes')
-            # note = form.save()
-            return redirect('serie_detail', pk=default_serie.pk)
-    form = forms.NoteForm
-    return render(request, 'series/home.html', {'form': form})
+        if not default_serie or default_serie.title != 'My Notes':
+            default_serie = models.Serie.create(title='My Notes')
+        note = form.save(commit=False)
+        note.serie = default_serie
+        note.save()
+        return redirect('serie_detail', pk=default_serie.pk)
+    else:
+        form = forms.NoteForm
+        return render(request, 'series/home.html', {'form': form})
 
 def new_serie(request):
     if request.method == 'POST':
