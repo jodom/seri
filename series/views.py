@@ -32,5 +32,5 @@ def serie_detail(request, pk=None):
     if pk:
         form = forms.NoteForm
         serie = models.Serie.objects.get(id=pk)
-        return render(request, 'series/serie.html', {'serie_title': serie.title, 'form': form})
+        return render(request, 'series/serie.html', {'serie': serie, 'form': form})
     return render(request, 'series/serie.html')

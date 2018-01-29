@@ -2,10 +2,12 @@
 
 {% block main %}
     <div id="wrapper">
-        {% if serie_title %}
-            <h1 id="id_serie_title">{{ serie_title }}</h1>
+        {% if serie %}
+            <h1 id="id_serie_title">{{ serie.title }}</h1>
             <ul id="id_notes_list">
-                <li class="note"></li>
+                {% for note in serie.notes %}
+                    <li class="note">{{note.content}}</li>
+                {% endfor %}
             </ul>
             <div>
                 <form action="" method="POST">
