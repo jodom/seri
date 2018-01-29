@@ -14,7 +14,7 @@ class NewSerieTest(LiveServerTestCase):
     def create_new_note(self, text):
         ''' type and save a note '''
         notebox = self.browser.find_element_by_id('id_new_note')
-        self.assertEqual(notebox.get_attribute('placeholder'), 'New note')
+        self.assertEqual(notebox.get_attribute('placeholder'), 'Add note')
 
         notebox.send_keys(text)
         notebox.send_keys(Keys.ENTER)
