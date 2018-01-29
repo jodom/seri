@@ -65,7 +65,7 @@ class PageTests(TestCase):
         response = views.serie_detail(request, pk=serie.pk)
         expected_response = render(
             request, 'series/serie.html',
-            {'serie_title': serie.title, 'form': forms.NoteForm()})
+            {'serie': serie, 'form': forms.NoteForm()})
         self.assertIn('Notes to future self', response.content.decode())
         self.assertEqual(
             self.strip_csrf(response.content.decode()),
@@ -76,6 +76,9 @@ class PageTests(TestCase):
         serie = models.Serie.objects.create(title='My Serie')
         response = views.serie_detail(request, pk=serie.pk)
         self.assertIn('<ul id="id_notes_list">', response.content.decode())
+
+        models.Note.objects.create(content="A random note", serie=serie)
+        response = views.serie_detail(request, pk=serie.pk)
         self.assertIn('<li class="note">', response.content.decode())
 
 
