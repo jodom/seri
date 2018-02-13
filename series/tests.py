@@ -72,14 +72,16 @@ class PageTests(TestCase):
             self.strip_csrf(response.content.decode()),
             self.strip_csrf(expected_response.content.decode()))
 
-    def test_notes_are_listed_under_series(self):
+
+class SerieTest(TestCase):
+    def test_displays_all_notes(self):
         serie = Serie.objects.create(title='My Serie')
-        Note.objects.create(content="A random note", serie=serie)
+        Note.objects.create(content="Note number uno", serie=serie)
+        Note.objects.create(content="Note number dos", serie=serie)
         response = self.client.get('/serie/1/')
-        self.assertContains(response, '<ul id="id_notes_list">')
         self.assertContains(response, 'My Serie')
-        self.assertContains(response, '<li class="note">')
-        self.assertContains(response, 'A random note')
+        self.assertContains(response, 'Note number uno')
+        self.assertContains(response, 'Note number dos')
 
 
 class FormTests(TestCase):
