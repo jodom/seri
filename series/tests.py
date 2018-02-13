@@ -52,13 +52,6 @@ class PageTests(TestCase):
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
-    def test_serie_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = serie_detail(request)
-        expected_response = render(request, 'series/serie.html')
-        self.assertEqual(self.strip_csrf(response.content.decode()), \
-        self.strip_csrf(expected_response.content.decode()))
-
     def test_see_a_new_Serie_details(self):
         request = HttpRequest()
         serie = Serie(title='Notes to future self')
@@ -74,6 +67,11 @@ class PageTests(TestCase):
 
 
 class SerieTest(TestCase):
+    def test_serie_detail_uses_serie_template(self):
+        serie = Serie.objects.create(title='My Serie')
+        response = self.client.get('/serie/{id}/'.format(id=serie.id))
+        self.assertTemplateUsed(response, 'series/serie.html')
+
     def test_displays_all_notes(self):
         serie = Serie.objects.create(title='My Serie')
         Note.objects.create(content="Note number uno", serie=serie)
