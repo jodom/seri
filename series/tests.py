@@ -39,6 +39,7 @@ class PageTests(TestCase):
     def test_home_page_redirects_after_POST(self):
         request = HttpRequest()
         request.method = 'POST'
+        request.POST['content'] = 'Sample Note'
         response = views.home(request)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/serie/1/')
