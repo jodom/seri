@@ -29,8 +29,8 @@ class NewSerieTest(LiveServerTestCase):
         notes_list = self.browser.find_element_by_tag_name('ul')
         notes = notes_list.find_elements_by_tag_name('li')
 
-        self.assertIn(text, [note.content for note in notes])
-        self.assertTrue(any(note.content == text for note in notes))
+        self.assertIn(text, [note.text for note in notes])
+        self.assertTrue(any(note.text == text for note in notes))
 
     def test_can_save_a_quick_note_and_see_it_later(self):
         # Jodom has been intospecting a lot lately
@@ -65,7 +65,7 @@ class NewSerieTest(LiveServerTestCase):
         # He enters, " My first note" and presses enter
         self.create_new_note('My second note')
 
-        # Now the serie has a single note : "My first Note"
+        # Now the serie has the single note too : "My second note"
         self.lookup_a_note_in_a_serie('My second note')
 
         # There is still a text box inviting him to add another note to the serie

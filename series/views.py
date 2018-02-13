@@ -34,3 +34,7 @@ def serie_detail(request, pk=None):
         serie = models.Serie.objects.get(id=pk)
         return render(request, 'series/serie.html', {'serie': serie, 'form': form})
     return render(request, 'series/serie.html')
+
+
+def add_note(request, pk):
+    pass
