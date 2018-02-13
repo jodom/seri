@@ -45,34 +45,17 @@ class PageTests(TestCase):
         self.assertEqual(response['location'], '/serie/1/')
 
 
-    def test_new_serie_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = new_serie(request)
-        expected_response = render(request, 'series/new_serie.html', {'form': SerieForm()})
-        self.assertEqual(self.strip_csrf(response.content.decode()), \
-        self.strip_csrf(expected_response.content.decode()))
-
-    def test_see_a_new_Serie_details(self):
-        request = HttpRequest()
-        serie = Serie(title='Notes to future self')
-        serie.save()
-        response = serie_detail(request, pk=serie.pk)
-        expected_response = render(
-            request, 'series/serie.html',
-            {'serie': serie, 'form': NoteForm()})
-        self.assertIn('Notes to future self', response.content.decode())
-        self.assertEqual(
-            self.strip_csrf(response.content.decode()),
-            self.strip_csrf(expected_response.content.decode()))
-
-
 class SerieTest(TestCase):
+    def test_new_serie_detail_uses_correct_template(self):
+        response = self.client.get('/serie/new/')
+        self.assertTemplateUsed(response, 'series/new_serie.html')
+
     def test_serie_detail_uses_serie_template(self):
         serie = Serie.objects.create(title='My Serie')
         response = self.client.get('/serie/{id}/'.format(id=serie.id))
         self.assertTemplateUsed(response, 'series/serie.html')
 
-    def test_displays_all_notes(self):
+    def test_see_serie_details_with_all_notes_displayed(self):
         serie = Serie.objects.create(title='My Serie')
         Note.objects.create(content="Note number uno", serie=serie)
         Note.objects.create(content="Note number dos", serie=serie)
