@@ -64,6 +64,27 @@ class SerieTest(TestCase):
         self.assertContains(response, 'Note number uno')
         self.assertContains(response, 'Note number dos')
 
+    def test_each_serie_displays_only_its_notes(self):
+        serie1 = Serie.objects.create(title="First Serie")
+        Note.objects.create(content="Note number uno serie Uno", serie=serie1)
+        Note.objects.create(content="Note number dos serie Uno", serie=serie1)
+
+        serie2 = Serie.objects.create(title="Second Serie")
+        Note.objects.create(content="Note number uno serie Dos", serie=serie2)
+        Note.objects.create(content="Note number dos serie Dos", serie=serie2)
+
+        response1 = self.client.get('/serie/{id}/'.format(id=serie1.id))
+        self.assertContains(response1, "Note number uno serie Uno")
+        self.assertContains(response1, "Note number dos serie Uno")
+        self.assertNotContains(response1, "Note number uno serie Dos")
+        self.assertNotContains(response1, "Note number dos serie Dos")
+
+        response1 = self.client.get('/serie/{id}/'.format(id=serie2.id))
+        self.assertContains(response1, "Note number dos serie Dos")
+        self.assertContains(response1, "Note number uno serie Dos")
+        self.assertNotContains(response1, "Note number uno serie Uno")
+        self.assertNotContains(response1, "Note number dos serie Uno")
+
 
 class FormTests(TestCase):
 
