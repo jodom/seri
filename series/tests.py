@@ -85,6 +85,18 @@ class SerieTest(TestCase):
         self.assertNotContains(response1, "Note number uno serie Uno")
         self.assertNotContains(response1, "Note number dos serie Uno")
 
+    def test_save_note_to_existing_list_via_POST(self):
+        serie = Serie.objects.create(title='My Serie')
+        Note.objects.create(content="First note to My Serie", serie=serie)
+        self.assertEqual(Note.objects.count(), 1)
+        self.client.post(
+            '/serie/{id}/add_note'.format(id=serie.id),
+            data={'content': 'An additional note to My Serie'}
+        )
+        self.assertEqual(Note.objects.count(), 2)
+        second_note = Note.objects.last()
+        self.assertEqual(second_note.serie, serie)
+
 
 class FormTests(TestCase):
 

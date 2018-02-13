@@ -34,6 +34,7 @@ def serie_detail(request, pk=None):
         return render(request, 'series/serie.html', {'serie': serie, 'form': form})
     return render(request, 'series/serie.html')
 
-
 def add_note(request, pk):
-    pass
+    if request.POST:
+        note = Note.objects.create(content=request.POST['content'], serie=Serie.objects.get(pk=pk))
+        return redirect('serie_detail', pk=pk)
