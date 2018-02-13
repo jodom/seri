@@ -5,9 +5,9 @@ from django.test import TestCase
 from django.contrib.auth import authenticate, login
 import re
 
-from . import views
-from . import models
-from . import forms
+from .views import home, new_serie, serie_detail, add_note
+from .models import Serie, Note
+from .forms import SerieForm, NoteForm
 # Create your tests here.
 
 class SmokeTest(TestCase):
@@ -21,7 +21,7 @@ class PageTests(TestCase):
 
     def test_root_url_resolves_to_home_view(self):
         found = resolve('/')
-        self.assertEqual(found.func, views.home)
+        self.assertEqual(found.func, home)
 
     def strip_csrf(self, htmltext):
         """ strip the csrf value from response in order to compare templates rendered """
@@ -30,8 +30,8 @@ class PageTests(TestCase):
 
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
-        response = views.home(request)
-        expected_response = render(request, 'series/home.html', {'form': forms.NoteForm()})
+        response = home(request)
+        expected_response = render(request, 'series/home.html', {'form': NoteForm()})
         self.assertEqual(
             self.strip_csrf(response.content.decode()),
             self.strip_csrf(expected_response.content.decode()))
@@ -40,41 +40,41 @@ class PageTests(TestCase):
         request = HttpRequest()
         request.method = 'POST'
         request.POST['content'] = 'Sample Note'
-        response = views.home(request)
+        response = home(request)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/serie/1/')
 
 
     def test_new_serie_page_returns_correct_html(self):
         request = HttpRequest()
-        response = views.new_serie(request)
-        expected_response = render(request, 'series/new_serie.html', {'form': forms.SerieForm()})
+        response = new_serie(request)
+        expected_response = render(request, 'series/new_serie.html', {'form': SerieForm()})
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
     def test_serie_page_returns_correct_html(self):
         request = HttpRequest()
-        response = views.serie_detail(request)
+        response = serie_detail(request)
         expected_response = render(request, 'series/serie.html')
         self.assertEqual(self.strip_csrf(response.content.decode()), \
         self.strip_csrf(expected_response.content.decode()))
 
     def test_see_a_new_Serie_details(self):
         request = HttpRequest()
-        serie = models.Serie(title='Notes to future self')
+        serie = Serie(title='Notes to future self')
         serie.save()
-        response = views.serie_detail(request, pk=serie.pk)
+        response = serie_detail(request, pk=serie.pk)
         expected_response = render(
             request, 'series/serie.html',
-            {'serie': serie, 'form': forms.NoteForm()})
+            {'serie': serie, 'form': NoteForm()})
         self.assertIn('Notes to future self', response.content.decode())
         self.assertEqual(
             self.strip_csrf(response.content.decode()),
             self.strip_csrf(expected_response.content.decode()))
 
     def test_notes_are_listed_under_series(self):
-        serie = models.Serie.objects.create(title='My Serie')
-        models.Note.objects.create(content="A random note", serie=serie)
+        serie = Serie.objects.create(title='My Serie')
+        Note.objects.create(content="A random note", serie=serie)
         response = self.client.get('/serie/1/')
         self.assertContains(response, '<ul id="id_notes_list">')
         self.assertContains(response, 'My Serie')
@@ -86,12 +86,12 @@ class FormTests(TestCase):
 
     # SerieForm tests
     def test_serie_form_has_custom_fields(self):
-        form = forms.SerieForm()
+        form = SerieForm()
         self.assertIn('id="id_title_input"', form.as_p())
         self.assertIn('placeholder="Create a new Serie"', form.as_p())
 
     def test_note_form_has_custom_fields(self):
-        form = forms.NoteForm()
+        form = NoteForm()
         self.assertIn('id="id_new_note"', form.as_p())
         self.assertIn('placeholder="Add note"', form.as_p())
 
@@ -100,28 +100,28 @@ class ModelTests(TestCase):
 
     # Serie model tests
     def test_create_and_save_new_serie(self):
-        serie = models.Serie(title="Notes to future self")
+        serie = Serie(title="Notes to future self")
         self.assertTrue(serie)
         # self.assertEqual(serie.author, 'auth.User')
         self.assertEqual(serie.title, 'Notes to future self')
         self.assertEqual(serie.limit, 100)
         self.assertTrue(serie.public)
-        count_before = models.Serie.objects.count()
+        count_before = Serie.objects.count()
         serie.save()
-        count_after = models.Serie.objects.count()
+        count_after = Serie.objects.count()
         self.assertLess(count_before, count_after)
         self.assertEqual(serie.note_set.count(), 0)
 
     # Note model tests
     def test_create_and_save_new_note(self):
-        serie = models.Serie(title="Notes to future self")
+        serie = Serie(title="Notes to future self")
         serie.save()
-        note = models.Note(content="My first note. Here is to a great day", serie=serie)
+        note = Note(content="My first note. Here is to a great day", serie=serie)
         self.assertTrue(note)
         self.assertEqual(note.serie, serie)
         self.assertEqual(note.content, "My first note. Here is to a great day")
-        count_before = models.Note.objects.count()
+        count_before = Note.objects.count()
         note.save()
-        count_after = models.Note.objects.count()
+        count_after = Note.objects.count()
         self.assertLess(count_before, count_after)
         self.assertEqual(serie.note_set.count(), count_after)
