@@ -104,3 +104,24 @@ class NewSerieTest(LiveServerTestCase):
         self.assertNotIn('This is a quick note', page.text)
         self.assertNotIn('My second note', page.text)
         self.assertNotIn('That was easy', page.text)
+
+
+class NewVisitorTest(LiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Chrome()
+        self.browser.implicitly_wait(3)
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def test_layout_and_styling(self):
+        # Jodom goes to the homepage
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # He notices the create note prompt is nicely centered
+        inputbox = self.browser.find_element_by_id('id_new_note')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width']/2, 512, delta=10
+        )
