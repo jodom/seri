@@ -121,7 +121,7 @@ class NewSerieTest(LiveServerTestCase):
         self.assertNotIn('That was easy', page.text)
 
         # deliberate fail
-        self.fail('Finich the test!!!')
+        # self.fail('Finich the test!!!')
 
 
 class NewVisitorTest(LiveServerTestCase):

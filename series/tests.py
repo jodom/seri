@@ -104,7 +104,7 @@ class FormTests(TestCase):
     def test_serie_form_has_custom_fields(self):
         form = SerieForm()
         self.assertIn('id="id_title_input"', form.as_p())
-        self.assertIn('placeholder="Create a new Serie"', form.as_p())
+        self.assertIn('placeholder="Enter Title"', form.as_p())
 
     def test_note_form_has_custom_fields(self):
         form = NoteForm()
