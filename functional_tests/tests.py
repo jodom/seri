@@ -82,9 +82,24 @@ class NewSerieTest(LiveServerTestCase):
         self.browser.quit()
         self.browser = webdriver.Chrome()
 
-        # Liz visits the homepage. There is no sign of Jodoms notes and Seris
+        # Liz visits the homepage and notices the button inviting her to create a Seris
         self.browser.get(self.live_server_url)
+        btn = self.browser.find_element_by_id('id_new_serie')
+        self.assertEqual(btn.text, 'New Serie')
 
+        # She decides to create a new series
+        btn.send_keys(Keys.ENTER)
+
+        #  She sees a page inviting her to enter the Title
+        titlebox = self.browser.find_element_by_id('id_title_input')
+        self.assertEqual(titlebox.get_attribute('placeholder'), 'Enter Title')
+
+        # She goes ahead and enters the title
+        titlebox.send_keys('TO LEARN, DO')
+        titlebox.send_keys(Keys.ENTER)
+
+        # A new page loads and she sees her new Serie
+        # There is no sign of Jodoms notes and Series
         page = self.browser.find_element_by_tag_name('body')
         self.assertNotIn('This is a quick note', page.text)
         self.assertNotIn('My second note', page.text)
@@ -96,14 +111,17 @@ class NewSerieTest(LiveServerTestCase):
         # She gets her own unique URL
         liz_default_serie_url = self.browser.current_url
         self.assertRegex(liz_default_serie_url, '/serie/.+')
-        self.assertNotEqual(jodom_default_serie_url, liz_default_serie_url)
+        # self.assertNotEqual(jodom_default_serie_url, liz_default_serie_url)
 
         # To confirm Jodom's notes are not showing
         page = self.browser.find_element_by_tag_name('body')
-        self.confirm_serie_title('My Notes')
+        self.confirm_serie_title('TO LEARN, DO')
         self.assertNotIn('This is a quick note', page.text)
         self.assertNotIn('My second note', page.text)
         self.assertNotIn('That was easy', page.text)
+
+        # deliberate fail
+        self.fail('Finich the test!!!')
 
 
 class NewVisitorTest(LiveServerTestCase):
