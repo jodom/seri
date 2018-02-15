@@ -3,7 +3,8 @@
 {% block main %}
     <h1 id="id_header">Seris</h1>
     <h3 id="id_sub_header">a note a day</h3>
-    <div>
+    <a id="id_new_serie" href="{% url 'new_serie'%}">New Serie</a>
+    <div style="text-align: center">
         <form action="" method="POST">
             {% csrf_token %} {{ form.non_field_errors }} {{ form.source.errors }} {{ form.source }}
             <p>

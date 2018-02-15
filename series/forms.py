@@ -9,7 +9,7 @@ class SerieForm(forms.ModelForm):
         fields = ('title', 'public')
         widgets = {
             'title': forms.TextInput(attrs={
-                'placeholder': "Create a new Serie",
+                'placeholder': "Enter Title",
                 'id': 'id_title_input'
             }),
         }
