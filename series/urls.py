@@ -1,0 +1,10 @@
+from django.conf.urls import url
+from . import views
+
+# series urls
+urlpatterns = [
+    url(r'^$', views.home, name='home'),
+    url(r'^serie/new/$', views.new_serie, name='new_serie'),
+    url(r'^serie/(?P<pk>\d+)/$', views.serie_detail, name='serie_detail'),
+    url(r'^serie/(?P<pk>\d+)/add_note$', views.add_note, name='add_note'),
+]
